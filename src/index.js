@@ -3,6 +3,7 @@
 import './index.html';
 import 'bulma/css/bulma.css';
 import 'spinkit/css/spinners/2-double-bounce.css';
+import './style.css';
 
 import { Main } from './Elm/Main.elm';
 

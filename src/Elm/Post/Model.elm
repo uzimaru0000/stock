@@ -2,25 +2,25 @@ module Post.Model exposing (..)
 
 import Data.Post exposing (Post)
 import Data.User exposing (User)
-
+import Data.Common exposing (UniqAsset)
 
 type alias Model =
-    { user : User
-    , post : Post
+    { user : UniqAsset User
+    , post : UniqAsset Post
     }
 
 
 init : Model
 init =
-    { user = User "" "" Nothing
+    { user = UniqAsset "" (User "" Nothing)
     , post =
-        { uid = ""
-        , title = "ViewTest"
-        , article = """ # hoge
+        UniqAsset "" <|
+            { title = "ViewTest"
+            , article = """ # hoge
 ## hogehoge
 - test
 - test
 """
-        , tags = [ "tag1", "tag2" ]
-        }
+            , tags = [ "tag1", "tag2" ]
+            }
     }

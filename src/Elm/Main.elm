@@ -4,8 +4,11 @@ import Html exposing (Html, program, text)
 -- import PostListing.Model exposing (..)
 -- import PostListing.Update exposing (update)
 -- import PostListing.View exposing (view)
-import Post.Model exposing (..)
-import Post.View exposing (view)
+-- import Post.Model exposing (..)
+-- import Post.View exposing (view)
+import Create.Model exposing (..)
+import Create.Update exposing (update)
+import Create.View exposing (view)
 
 
 --main : Html msg
@@ -13,11 +16,11 @@ import Post.View exposing (view)
 --    text "hoge"
 
 
-main : Program Never Model msg
+main : Program Never Model Msg
 main =
     program
-        { init = init ! []
+        { init = init
         , view = view
-        , update = \_ model -> model ! []
+        , update = update
         , subscriptions = always Sub.none
         }

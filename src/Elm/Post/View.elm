@@ -25,7 +25,7 @@ view { post } =
                 [ box []
                     [ level []
                         [ levelLeft []
-                            [ levelItem [] [ title H3 [] [ text post.title ] ]
+                            [ levelItem [] [ title H3 [] [ text post.asset.title ] ]
                             ]
                         , levelRight []
                             [ button { buttonModifiers | color = White }
@@ -37,10 +37,10 @@ view { post } =
                     , hr [] []
                     , content Standard
                         []
-                        [ toHtml [] post.article
+                        [ toHtml [] post.asset.article
                         ]
                     , hr [] []
-                    , post.tags
+                    , post.asset.tags
                         |> List.map postTag
                         |> tags []
                     ]
