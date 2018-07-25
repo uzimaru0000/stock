@@ -1,7 +1,6 @@
 module Edit.Update exposing (..)
 
 import Edit.Model exposing (..)
-import Data.Post exposing (Post)
 import Firebase exposing (..)
 import Navigation
 import Routing exposing (..)
@@ -14,32 +13,42 @@ update msg model =
             { model | windowHeight = height } ! []
 
         InputArticle str ->
-            { model | article = str } ! []
+            let
+                title =
+                    str
+                        |> String.split "\n"
+                        |> List.head
+                        |> Maybe.withDefault ""
+
+                article =
+                    str
+                        |> String.split "\n"
+                        |> List.drop 1
+                        |> String.join "\n"
+            in
+                { model
+                    | title = title
+                    , article = article
+                    , input = str
+                }
+                    ! []
 
         InputTags str ->
-            { model | tags = str } ! []
+            let
+                tags =
+                    str
+                        |> String.split ","
+                        |> List.map String.trim
+                        |> List.filter (not << String.isEmpty)
+            in
+                { model | tags = tags } ! []
 
         Store ->
             let
-                splitText =
-                    model.article
-                        |> String.split "\n"
-
                 post =
-                    { title =
-                        splitText
-                            |> List.head
-                            |> Maybe.withDefault ""
-                    , article =
-                        splitText
-                            |> List.tail
-                            |> Maybe.map (String.join "\n")
-                            |> Maybe.withDefault ""
-                    , tags =
-                        model.tags
-                            |> String.split ","
-                            |> List.map String.trim
-                            |> List.filter (not << String.isEmpty)
+                    { title = model.title
+                    , article = model.article
+                    , tags = model.tags
                     }
             in
                 model ! [ storePost ( model.post |> Maybe.map .uid, post ) ]

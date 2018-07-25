@@ -6,17 +6,15 @@ import Data.Common exposing (UniqAsset, Uid)
 
 
 type alias Model =
-    { user : User
-    , posts : List (UniqAsset Post)
+    { posts : List (UniqAsset Post)
     }
 
 
 type Msg
-    = SelectPost Uid
+    = ChangeRoute String
 
 
 init : User -> List (UniqAsset Post) -> Model
 init user posts =
-    { user = user
-    , posts = posts
+    { posts = posts
     }

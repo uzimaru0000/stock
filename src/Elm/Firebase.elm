@@ -20,6 +20,9 @@ port postListInit : () -> Cmd msg
 port editInit : Uid -> Cmd msg
 
 
+port postInit : Uid -> Cmd msg
+
+
 port storePost : ( Maybe Uid, Post ) -> Cmd msg
 
 
@@ -37,6 +40,9 @@ port getPostListData : (List (UniqAsset Post) -> msg) -> Sub msg
 
 
 port getEditData : (UniqAsset Post -> msg) -> Sub msg
+
+
+port getPostData : (UniqAsset Post -> msg) -> Sub msg
 
 
 port successStorePost : (Uid -> msg) -> Sub msg

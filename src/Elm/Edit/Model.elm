@@ -5,8 +5,10 @@ import Data.Post exposing (Post)
 
 
 type alias Model =
-    { article : String
-    , tags : String
+    { title : String
+    , article : String
+    , input : String
+    , tags : List String
     , windowHeight : Int
     , post : Maybe (UniqAsset Post)
     }
@@ -22,8 +24,23 @@ type Msg
 
 init : Maybe (UniqAsset Post) -> Int -> Model
 init maybePost winHeight =
-    { article = ""
+    { title =
+        maybePost
+            |> Maybe.map (.asset >> .title)
+            |> Maybe.withDefault ""
+    , article =
+        maybePost
+            |> Maybe.map (.asset >> .article)
+            |> Maybe.withDefault ""
+    , input =
+        maybePost
+            |> Maybe.map .asset
+            |> Maybe.map (\x -> x.title ++ "\n" ++ x.article)
+            |> Maybe.withDefault ""
     , windowHeight = winHeight
-    , tags = ""
+    , tags =
+        maybePost
+            |> Maybe.map (.asset >> .tags)
+            |> Maybe.withDefault []
     , post = maybePost
     }

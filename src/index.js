@@ -72,19 +72,25 @@ const elmInit = app => {
     app.ports.editInit.subscribe(uid => {
         db.ref(`${auth.currentUser.uid}/posts/${uid}`)
             .once('value')
-            .then(ss => app.ports.getEditData({ uid: ss.key, asset: ss.val() }));
+            .then(ss => app.ports.getEditData.send({ uid: ss.key, asset: ss.val() }));
     });
 
     app.ports.storePost.subscribe(post => {
         if (post[0]) {
             db.ref(`${auth.currentUser.uid}/posts/${post[0]}`)
                 .set(post[1])
-                .then(x => app.ports.successStorePost.send(x.key));
+                .then(_ => app.ports.successStorePost.send(post[0]));
         } else {
             db.ref(`${auth.currentUser.uid}/posts`)
                 .push(post[1])
                 .then(x => app.ports.successStorePost.send(x.key));
         }
+    });
+
+    app.ports.postInit.subscribe(uid => {
+        db.ref(`${auth.currentUser.uid}/posts/${uid}`)
+            .once('value')
+            .then(ss => app.ports.getPostData.send({ uid: ss.key, asset: ss.val() }));
     });
 
 };

@@ -7,8 +7,6 @@ import Model exposing (..)
 import Data.User exposing (User)
 import Routing exposing (Route, href)
 import Bulma.Components exposing (..)
-import Bulma.Layout exposing (..)
-import Bulma.Columns exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import PostListing.View as PostListing
@@ -37,7 +35,7 @@ frame maybeUser currentPage isLoading =
 
 navigation : Maybe User -> Html Msg
 navigation user =
-    navbar { navbarModifiers | color = Light }
+    navbar { navbarModifiers | color = Dark }
         []
         [ navbarBrand []
             (navbarBurger False [] [])

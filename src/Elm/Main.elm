@@ -9,6 +9,7 @@ import Routing exposing (parseLocation)
 import Firebase exposing (..)
 import Edit.Sub as Edit
 
+
 main : Program (Maybe User) Model Msg
 main =
    programWithFlags LocationChange
@@ -27,5 +28,7 @@ subscriptions model =
         _ ->
             Sub.none
     , getPostListData PostListInit
+    , getPostData PostInit
+    , getEditData EditInit
     ]
     |> Sub.batch

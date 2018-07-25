@@ -7,11 +7,12 @@ import Bulma.Elements exposing (..)
 import Bulma.Form exposing (..)
 import Bulma.Modifiers exposing (..)
 import Data.Post exposing (Post)
+import Data.Common exposing (UniqAsset)
 import Html exposing (Html, text, span)
-import Html.Attributes as Html
+import Html.Events exposing (onClick)
 import Markdown exposing (toHtml)
 import PostListing.Model exposing (..)
-import Routing exposing (Route, href)
+import Routing exposing (Route, routeToUrl)
 
 
 view : Model -> Html Msg
@@ -20,33 +21,36 @@ view model =
         []
         [ if List.length model.posts /= 0 then
             model.posts
-                |> List.map (.asset >> postCard >> List.singleton >> column { columnModifiers | widths = postWidth } [])
+                |> List.map (postCard >> List.singleton >> column { columnModifiers | widths = postWidth } [])
                 |> columns { columnsModifiers | multiline = True } []
           else
             fields Centered
                 []
-                [ control controlModifiers
+                [ controlButton buttonModifiers
                     []
-                    [ Html.a
-                        [ Html.class "button"
-                        , href Routing.Create
-                        ]
-                        [ text "Create Stack" ]
-                    ]
+                    [ onClick (ChangeRoute <| routeToUrl Routing.Create) ]
+                    [ span [] [ text "Create Stock" ] ]
                 ]
         ]
 
 
-postCard : Post -> Html Msg
-postCard post =
-    card []
+postCard : UniqAsset Post -> Html Msg
+postCard { uid, asset } =
+    card
+        [ onClick <| ChangeRoute (routeToUrl <| Routing.Post uid)
+        ]
         [ cardHeader []
-            [ cardTitle [] [ text post.title ]
+            [ cardTitle []
+                [ content Standard
+                    []
+                    [ toHtml [] asset.title
+                    ]
+                ]
             ]
         , cardContent []
             [ content Standard
                 []
-                [ (previewText >> toHtml []) post.article
+                [ (previewText >> toHtml []) asset.article
                 ]
             ]
         ]

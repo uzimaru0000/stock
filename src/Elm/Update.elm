@@ -8,6 +8,7 @@ import PostListing.Model as PostListing
 import PostListing.Update as PostListing
 import Edit.Model as Edit
 import Edit.Update as Edit
+import Post.Model as Post
 import Window exposing (height)
 import Task
 
@@ -23,7 +24,7 @@ update msg model =
 
         ( Login, _ ) ->
             model ! [ login () ]
-        
+
         ( Logout, _ ) ->
             model ! [ logout () ]
 
@@ -31,16 +32,18 @@ update msg model =
             case model.user of
                 Just user ->
                     { model | pageState = Loaded (PostList <| PostListing.init user data) } ! []
+
                 Nothing ->
                     model ! []
 
         ( CreateInit maybePost winHeight, _ ) ->
             { model | pageState = Loaded (Edit <| Edit.init maybePost winHeight) } ! []
 
-
         ( EditInit post, _ ) ->
             model ! [ Task.perform (CreateInit <| Just post) height ]
-            
+
+        ( PostInit post, _ ) ->
+            { model | pageState = Loaded (PostView <| Post.init post) } ! []
 
         ( PostListingMsg subMsg, PostList oldModel ) ->
             subUpdate PostListing.update PostListingMsg subMsg PostList oldModel model
@@ -77,7 +80,7 @@ setRoute route model =
                     { model | pageState = Loaded Home } ! []
 
             Routing.Post uid ->
-                model ! []
+                transition <| postInit uid
 
             Routing.Create ->
                 transition <| Task.perform (CreateInit Nothing) height

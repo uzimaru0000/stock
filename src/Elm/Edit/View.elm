@@ -6,7 +6,7 @@ import Bulma.Form exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Html exposing (Html, text, div, span)
-import Html.Attributes exposing (style, class, id, placeholder)
+import Html.Attributes exposing (style, class, id, placeholder, value)
 import Html.Events exposing (onInput, onClick)
 import Edit.Model exposing (..)
 import Markdown exposing (..)
@@ -39,6 +39,7 @@ editArea model =
                     ]
                 , onInput InputArticle
                 , placeholder "← This line is title"
+                , value model.input
                 ]
                 []
             ]
@@ -56,25 +57,44 @@ editArea model =
 
 previewArea : Model -> Html Msg
 previewArea model =
-    div [ style [ ( "height", "100%" ) ] ]
-        [ box [ style [ ( "height", "100%" ) ] ]
-            [ content Standard [] [ toHtml [] model.article ]
-            , model.tags
-                |> String.split ","
-                |> List.map String.trim
-                |> List.filter (not << String.isEmpty)
-                |> List.map tagPreview
-                |> tags []
-            ]
-        , buttons Right
-            []
-            [ button { buttonModifiers | color = Success }
-                [ style [ ( "padding", "0 32px" ) ]
-                , onClick Store
+    let
+        title =
+            if (String.length model.title) == 0 then
+                ""
+            else
+                [ "# "
+                , model.title
+                    |> String.filter ((/=) '#')
+                    |> String.trim
+                , "\n"
+                , "---"
                 ]
-                [ span [] [ text "Create" ] ]
+                    |> String.join ""
+
+        md =
+            [ title, model.article ]
+                |> String.join "\n"
+    in
+        div [ style [ ( "height", "100%" ) ] ]
+            [ box [ style [ ( "height", "100%" ) ] ]
+                [ content Standard
+                    []
+                    [ toHtml [] md
+                    ]
+                , model.tags
+                    |> List.map tagPreview
+                    |> tags []
+                ]
+            , buttons Right
+                []
+                [ button { buttonModifiers | color = Success }
+                    [ style [ ( "padding", "0 32px" ) ]
+                    , onClick Store
+                    ]
+                    [ span [] [ text "Finish" ]
+                    ]
+                ]
             ]
-        ]
 
 
 tagPreview : String -> Html Msg

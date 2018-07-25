@@ -8,7 +8,6 @@ import Edit.Model as Edit
 import Post.Model as Post
 import PostListing.Model as PostListing
 import Routing exposing (..)
-import Window exposing (Size)
 
 
 type Page
@@ -37,11 +36,11 @@ type Msg
     | Login
     | Logout
     | PostListingMsg PostListing.Msg
-    -- | PostViewMsg
     | EditMsg Edit.Msg
     | PostListInit (List (UniqAsset Post))
     | CreateInit (Maybe (UniqAsset Post)) Int
     | EditInit (UniqAsset Post)
+    | PostInit (UniqAsset Post)
 
 
 getPage : PageState -> Page

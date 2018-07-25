@@ -1,13 +1,14 @@
 module Post.View exposing (..)
 
 import Post.Model exposing (..)
-import Html exposing (Html, text, div, span, hr, i)
+import Html exposing (Html, text, div, span, hr, i, a)
 import Html.Attributes exposing (style, class)
 import Bulma.Layout exposing (..)
 import Bulma.Columns exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Markdown exposing (toHtml)
+import Routing exposing (Route, href)
 
 
 view : Model -> Html msg
@@ -25,11 +26,13 @@ view { post } =
                 [ box []
                     [ level []
                         [ levelLeft []
-                            [ levelItem [] [ title H3 [] [ text post.asset.title ] ]
+                            [ levelItem [] [ content Standard [] [ toHtml [] post.asset.title ] ]
                             ]
                         , levelRight []
-                            [ button { buttonModifiers | color = White }
-                                []
+                            [ a
+                                [ href <| Routing.Edit post.uid
+                                , class "button is-white"
+                                ]
                                 [ icon Standard [] [ i [ class "fas fa-edit" ] [] ]
                                 ]
                             ]
