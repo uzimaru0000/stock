@@ -91,7 +91,7 @@ loading isLoading =
         [ classList
             [ ( "inactive", not isLoading )
             , ( "loading", True )
-            , ( "has-background-info", True )
+            , ( "has-background-light", True )
             ]
         ]
         [ div

@@ -42,6 +42,14 @@ const createUser = raw => {
     };
 };
 
+const createPost = raw => {
+    return {
+        title: raw.title,
+        article: raw.article,
+        tags: raw.tags || []
+    };
+};
+
 const elmInit = app => {
     app.ports.login.subscribe(() => {
         if (!auth.currentUser) {
@@ -61,7 +69,7 @@ const elmInit = app => {
                 ss.forEach(x => {
                     postList.push({
                         uid: x.key,
-                        asset: x.val()
+                        asset: createPost(x.val())
                     });
                 });
 
@@ -72,7 +80,7 @@ const elmInit = app => {
     app.ports.editInit.subscribe(uid => {
         db.ref(`${auth.currentUser.uid}/posts/${uid}`)
             .once('value')
-            .then(ss => app.ports.getEditData.send({ uid: ss.key, asset: ss.val() }));
+            .then(ss => app.ports.getEditData.send({ uid: ss.key, asset: createPost(ss.val()) }));
     });
 
     app.ports.storePost.subscribe(post => {
@@ -90,7 +98,7 @@ const elmInit = app => {
     app.ports.postInit.subscribe(uid => {
         db.ref(`${auth.currentUser.uid}/posts/${uid}`)
             .once('value')
-            .then(ss => app.ports.getPostData.send({ uid: ss.key, asset: ss.val() }));
+            .then(ss => app.ports.getPostData.send({ uid: ss.key, asset: createPost(ss.val()) }));
     });
 
     app.ports.removePost.subscribe(uid => db.ref(`${auth.currentUser.uid}/posts/${uid}`).remove());

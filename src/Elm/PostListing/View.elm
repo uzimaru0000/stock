@@ -41,9 +41,12 @@ postCard { uid, asset } =
         ]
         [ cardHeader []
             [ cardTitle []
-                [ content Standard
+                [ title H3
                     []
-                    [ toHtml [] asset.title
+                    [ asset.title
+                        |> String.filter ((/=) '#')
+                        |> String.trim
+                        |> text
                     ]
                 ]
             ]
