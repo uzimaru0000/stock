@@ -25,7 +25,7 @@ module.exports = {
             {
                 test: /\.elm$/,
                 exclude: [ /node_modules/, /elm-stuff/ ],
-                use: 'elm-webpack-loader?debug=true'
+                use: `elm-webpack-loader?debug=${process.env.DEBUG}`
             }
         ]
     },
