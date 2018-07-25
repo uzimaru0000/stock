@@ -1,9 +1,9 @@
 'use struct'
 
 import './index.html';
-import 'bulma/css/bulma.css';
-import 'spinkit/css/spinners/2-double-bounce.css';
 import './style.css';
+import 'bulma/css/bulma.css';
+import 'spinkit/css/spinners/8-circle.css';
 
 import { Main } from './Elm/Main.elm';
 
@@ -22,10 +22,69 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 const db = firebase.database();
-const providers = new firebase.auth.TwitterAuthProvider();
+const provider = new firebase.auth.TwitterAuthProvider();
 auth.languageCode = 'jp';
 auth.getRedirectResult();
+auth.onAuthStateChanged((() => {
+    let flag = false;
+    return user => {
+        if (!flag) {
+            elmInit(Main.fullscreen(user ? createUser(user) : null));
+            flag = true;
+        }
+    };
+})());
 
-const main = document.getElementById('main');
+const createUser = raw => {
+    return {
+        name: raw.displayName,
+        iconUrl: raw.photoURL || null
+    };
+};
 
-const app = Main.fullscreen();
+const elmInit = app => {
+    app.ports.login.subscribe(() => {
+        if (!auth.currentUser) {
+            auth.signInWithRedirect(provider);
+        }
+    });
+
+    app.ports.logout.subscribe(() => {
+        if (auth.currentUser) auth.signOut().then(_ => app.ports.logoutSuccess.send(null));
+    });
+
+    app.ports.postListInit.subscribe(() => {
+        db.ref(`${auth.currentUser.uid}/posts`)
+            .once('value')
+            .then(ss => {
+                const postList = [];
+                ss.forEach(x => {
+                    postList.push({
+                        uid: x.key,
+                        asset: x.val()
+                    });
+                });
+
+                app.ports.getPostListData.send(postList);
+            });
+    });
+
+    app.ports.editInit.subscribe(uid => {
+        db.ref(`${auth.currentUser.uid}/posts/${uid}`)
+            .once('value')
+            .then(ss => app.ports.getEditData({ uid: ss.key, asset: ss.val() }));
+    });
+
+    app.ports.storePost.subscribe(post => {
+        if (post[0]) {
+            db.ref(`${auth.currentUser.uid}/posts/${post[0]}`)
+                .set(post[1])
+                .then(x => app.ports.successStorePost.send(x.key));
+        } else {
+            db.ref(`${auth.currentUser.uid}/posts`)
+                .push(post[1])
+                .then(x => app.ports.successStorePost.send(x.key));
+        }
+    });
+
+};

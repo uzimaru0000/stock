@@ -1,5 +1,7 @@
 module Routing exposing (..)
 
+import Html
+import Html.Attributes as Html
 import Data.Common exposing (Uid)
 import UrlParser exposing (..)
 import Navigation exposing (..)
@@ -8,6 +10,8 @@ import Navigation exposing (..)
 type Route
     = Home
     | Post Uid
+    | Create
+    | Edit Uid
     | NotFound
 
 
@@ -16,6 +20,8 @@ matchers =
     oneOf
         [ map Home top
         , map Post (s "post" </> string)
+        , map Create (s "new")
+        , map Edit (s "edit" </> string)
         ]
 
 
@@ -31,17 +37,25 @@ parseLocation loc =
 
 routeToUrl : Route -> String
 routeToUrl route =
-    case route of
-        Home ->
-            "/"
+    "#/"
+        ++ (case route of
+                Home ->
+                    ""
 
-        Post uid ->
-            String.join "/" [ "post", uid ]
+                Post uid ->
+                    String.join "/" [ "post", uid ]
 
-        NotFound ->
-            "notfound"
+                Edit uid ->
+                    String.join "/" [ "edit", uid ]
+
+                Create ->
+                    "new"
+
+                NotFound ->
+                    "notfound"
+           )
 
 
-transitionRoute : Route -> Cmd msg
-transitionRoute =
-    newUrl << routeToUrl
+href : Route -> Html.Attribute msg
+href =
+    Html.href << routeToUrl

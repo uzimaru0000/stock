@@ -4,20 +4,36 @@ import Bulma.Components exposing (..)
 import Bulma.Layout exposing (..)
 import Bulma.Columns exposing (..)
 import Bulma.Elements exposing (..)
+import Bulma.Form exposing (..)
 import Bulma.Modifiers exposing (..)
 import Data.Post exposing (Post)
-import Html exposing (Html, text)
+import Html exposing (Html, text, span)
+import Html.Attributes as Html
 import Markdown exposing (toHtml)
 import PostListing.Model exposing (..)
+import Routing exposing (Route, href)
 
 
 view : Model -> Html Msg
 view model =
     section NotSpaced
         []
-        [ model.posts
-            |> List.map (postCard >> List.singleton >> column { columnModifiers | widths = postWidth } [])
-            |> columns { columnsModifiers | multiline = True } []
+        [ if List.length model.posts /= 0 then
+            model.posts
+                |> List.map (.asset >> postCard >> List.singleton >> column { columnModifiers | widths = postWidth } [])
+                |> columns { columnsModifiers | multiline = True } []
+          else
+            fields Centered
+                []
+                [ control controlModifiers
+                    []
+                    [ Html.a
+                        [ Html.class "button"
+                        , href Routing.Create
+                        ]
+                        [ text "Create Stack" ]
+                    ]
+                ]
         ]
 
 

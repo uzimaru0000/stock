@@ -6,31 +6,17 @@ import Data.Common exposing (UniqAsset, Uid)
 
 
 type alias Model =
-    { user : UniqAsset User
-    , posts : UniqAsset (List Post)
+    { user : User
+    , posts : List (UniqAsset Post)
     }
 
 
 type Msg
     = SelectPost Uid
-    
 
-init : Model
-init =
-    { user = UniqAsset "" <| User "" Nothing
-    , posts =
-        UniqAsset ""
-            (List.range 0 7
-                |> List.map
-                    (\_ ->
-                        { title = "hoge"
-                        , article = """# hoge
-## hogehoge
-- hoge
-- hoge
-"""
-                        , tags = []
-                        }
-                    )
-            )
+
+init : User -> List (UniqAsset Post) -> Model
+init user posts =
+    { user = user
+    , posts = posts
     }

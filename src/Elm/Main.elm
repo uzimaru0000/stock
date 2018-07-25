@@ -1,26 +1,31 @@
 module Main exposing (..)
 
-import Html exposing (Html, program, text)
--- import PostListing.Model exposing (..)
--- import PostListing.Update exposing (update)
--- import PostListing.View exposing (view)
--- import Post.Model exposing (..)
--- import Post.View exposing (view)
-import Create.Model exposing (..)
-import Create.Update exposing (update)
-import Create.View exposing (view)
+import Navigation exposing (programWithFlags)
+import Model exposing (..)
+import Update exposing (..)
+import View exposing (..)
+import Data.User exposing (User)
+import Routing exposing (parseLocation)
+import Firebase exposing (..)
+import Edit.Sub as Edit
 
-
---main : Html msg
---main =
---    text "hoge"
-
-
-main : Program Never Model Msg
+main : Program (Maybe User) Model Msg
 main =
-    program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = always Sub.none
-        }
+   programWithFlags LocationChange
+    { init = \maybeUser loc -> setRoute (parseLocation loc) (init maybeUser)
+    , update = update
+    , view = view
+    , subscriptions = subscriptions
+    }
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    [ case getPage model.pageState of
+        Edit model ->
+            Edit.subscriptions model |> Sub.map EditMsg
+
+        _ ->
+            Sub.none
+    , getPostListData PostListInit
+    ]
+    |> Sub.batch

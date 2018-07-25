@@ -1,22 +1,21 @@
-module Create.View exposing (..)
+module Edit.View exposing (..)
 
 import Bulma.Layout exposing (..)
 import Bulma.Columns exposing (..)
 import Bulma.Form exposing (..)
 import Bulma.Elements exposing (..)
-import Bulma.Components exposing (..)
 import Bulma.Modifiers exposing (..)
 import Html exposing (Html, text, div, span)
-import Html.Attributes exposing (style, class, id, rows)
+import Html.Attributes exposing (style, class, id, placeholder)
 import Html.Events exposing (onInput, onClick)
-import Create.Model exposing (..)
+import Edit.Model exposing (..)
 import Markdown exposing (..)
 
 
 view : Model -> Html Msg
 view model =
     section NotSpaced
-        [ style [ ( "height", (toString <| model.windowSize.height - 52) ++ "px" ) ]
+        [ style [ ( "height", (toString <| model.windowHeight - 52) ++ "px" ) ]
         ]
         [ columns columnsModifiers
             [ style [ ( "height", "100%" ) ] ]
@@ -39,6 +38,7 @@ editArea model =
                     , ( "max-height", "initial" )
                     ]
                 , onInput InputArticle
+                , placeholder "← This line is title"
                 ]
                 []
             ]
@@ -46,7 +46,9 @@ editArea model =
             [ style [ ( "height", "auto" ) ] ]
             [ controlText controlInputModifiers
                 []
-                [ onInput InputTags ]
+                [ onInput InputTags
+                , placeholder "Input Tags (Ex : tag1, tag2)"
+                ]
                 []
             ]
         ]
@@ -68,7 +70,7 @@ previewArea model =
             []
             [ button { buttonModifiers | color = Success }
                 [ style [ ( "padding", "0 32px" ) ]
-                , onClick Create
+                , onClick Store
                 ]
                 [ span [] [ text "Create" ] ]
             ]
