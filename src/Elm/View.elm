@@ -76,7 +76,7 @@ page currentPage =
             PostListing.view model |> Html.map PostListingMsg
 
         PostView model ->
-            Post.view model
+            Post.view model |> Html.map PostMsg
 
         Edit model ->
             Edit.view model |> Html.map EditMsg

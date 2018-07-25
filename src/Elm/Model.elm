@@ -36,6 +36,7 @@ type Msg
     | Login
     | Logout
     | PostListingMsg PostListing.Msg
+    | PostMsg Post.Msg
     | EditMsg Edit.Msg
     | PostListInit (List (UniqAsset Post))
     | CreateInit (Maybe (UniqAsset Post)) Int

@@ -8,6 +8,11 @@ type alias Model =
     }
 
 
+type Msg
+    = ChangeRoute String
+    | RemovePost
+
+
 init : UniqAsset Post -> Model
 init post =
     { post = post

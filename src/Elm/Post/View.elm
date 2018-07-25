@@ -3,15 +3,16 @@ module Post.View exposing (..)
 import Post.Model exposing (..)
 import Html exposing (Html, text, div, span, hr, i, a)
 import Html.Attributes exposing (style, class)
+import Html.Events exposing (onClick)
 import Bulma.Layout exposing (..)
 import Bulma.Columns exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Markdown exposing (toHtml)
-import Routing exposing (Route, href)
+import Routing exposing (Route, routeToUrl)
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view { post } =
     section NotSpaced
         []
@@ -26,14 +27,25 @@ view { post } =
                 [ box []
                     [ level []
                         [ levelLeft []
-                            [ levelItem [] [ content Standard [] [ toHtml [] post.asset.title ] ]
+                            [ levelItem []
+                                [ title H3
+                                    []
+                                    [ post.asset.title
+                                        |> String.filter ((/=) '#')
+                                        |> String.trim
+                                        |> text
+                                    ]
+                                ]
                             ]
                         , levelRight []
-                            [ a
-                                [ href <| Routing.Edit post.uid
-                                , class "button is-white"
+                            [ levelItem [ onClick <| ChangeRoute (routeToUrl <| Routing.Edit post.uid) ]
+                                [ button { buttonModifiers | color = White }
+                                    []
+                                    [ icon Standard [] [ i [ class "fas fa-edit" ] [] ]
+                                    ]
                                 ]
-                                [ icon Standard [] [ i [ class "fas fa-edit" ] [] ]
+                            , levelItemLink []
+                                [ delete [ onClick RemovePost ] []
                                 ]
                             ]
                         ]
@@ -57,7 +69,7 @@ widths =
     Just Width9
 
 
-postTag : String -> Html msg
+postTag : String -> Html Msg
 postTag str =
     tag { tagModifiers | color = Info, isLink = True, size = Standard }
         []

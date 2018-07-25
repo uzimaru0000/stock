@@ -9,6 +9,7 @@ import PostListing.Update as PostListing
 import Edit.Model as Edit
 import Edit.Update as Edit
 import Post.Model as Post
+import Post.Update as Post
 import Window exposing (height)
 import Task
 
@@ -50,6 +51,9 @@ update msg model =
 
         ( EditMsg subMsg, Edit oldModel ) ->
             subUpdate Edit.update EditMsg subMsg Edit oldModel model
+
+        ( PostMsg subMsg, PostView oldModel ) ->
+            subUpdate Post.update PostMsg subMsg PostView oldModel model
 
         _ ->
             model ! []

@@ -26,6 +26,9 @@ port postInit : Uid -> Cmd msg
 port storePost : ( Maybe Uid, Post ) -> Cmd msg
 
 
+port removePost : Uid -> Cmd msg
+
+
 
 -- Sub ports
 

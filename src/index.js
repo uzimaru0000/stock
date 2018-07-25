@@ -93,4 +93,6 @@ const elmInit = app => {
             .then(ss => app.ports.getPostData.send({ uid: ss.key, asset: ss.val() }));
     });
 
+    app.ports.removePost.subscribe(uid => db.ref(`${auth.currentUser.uid}/posts/${uid}`).remove());
+
 };
