@@ -41,7 +41,7 @@ update msg model =
                         |> List.map String.trim
                         |> List.filter (not << String.isEmpty)
             in
-                { model | tags = tags } ! []
+                { model | tags = tags, tagInput = str } ! []
 
         Store ->
             let

@@ -5,7 +5,7 @@ import Bulma.Columns exposing (..)
 import Bulma.Form exposing (..)
 import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
-import Html exposing (Html, text, div, span)
+import Html exposing (Html, text, div, span, hr)
 import Html.Attributes exposing (style, class, id, placeholder, value)
 import Html.Events exposing (onInput, onClick)
 import Edit.Model exposing (..)
@@ -49,6 +49,7 @@ editArea model =
                 []
                 [ onInput InputTags
                 , placeholder "Input Tags (Ex : tag1, tag2)"
+                , value model.tagInput
                 ]
                 []
             ]
@@ -76,11 +77,17 @@ previewArea model =
                 |> String.join "\n"
     in
         div [ style [ ( "height", "100%" ) ] ]
-            [ box [ style [ ( "height", "100%" ) ] ]
+            [ box
+                [ style
+                    [ ( "height", "100%" )
+                    , ( "overflow", "auto" )
+                    ]
+                ]
                 [ content Standard
                     []
                     [ toHtml [] md
                     ]
+                , hr [] []
                 , model.tags
                     |> List.map tagPreview
                     |> tags []

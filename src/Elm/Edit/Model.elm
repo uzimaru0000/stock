@@ -9,6 +9,7 @@ type alias Model =
     , article : String
     , input : String
     , tags : List String
+    , tagInput : String
     , windowHeight : Int
     , post : Maybe (UniqAsset Post)
     }
@@ -42,5 +43,9 @@ init maybePost winHeight =
         maybePost
             |> Maybe.map (.asset >> .tags)
             |> Maybe.withDefault []
+    , tagInput =
+        maybePost
+            |> Maybe.map (.asset >> .tags >> String.join ", ")
+            |> Maybe.withDefault ""
     , post = maybePost
     }
