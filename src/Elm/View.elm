@@ -1,6 +1,6 @@
 module View exposing (..)
 
-import Html exposing (Html, text, div)
+import Html exposing (Html, text, div, i)
 import Html.Attributes exposing (classList, class)
 import Html.Events exposing (onClick)
 import Model exposing (..)
@@ -58,7 +58,8 @@ navigation user =
                 ]
             , navbarEnd []
                 [ if user /= Nothing then
-                    navbarItemLink False [ href Routing.Create ] [ text "New Stock" ]
+                    navbarItemLink False [ href Routing.Create ]
+                        [ icon Medium [] [ i [ class "fas fa-lg fa-plus" ] [] ] ]
                   else
                     text ""
                 ]
