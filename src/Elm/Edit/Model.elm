@@ -20,6 +20,7 @@ type Msg
     | StoreSuccess Uid
     | InputArticle String
     | InputTags String
+    | IgnoreTag
     | ChangeSize Int
 
 

@@ -43,6 +43,9 @@ update msg model =
             in
                 { model | tags = tags, tagInput = str } ! []
 
+        IgnoreTag ->
+            { model | input = model.input ++ "\t" } ! []
+
         Store ->
             let
                 post =

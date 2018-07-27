@@ -7,9 +7,10 @@ import Bulma.Elements exposing (..)
 import Bulma.Modifiers exposing (..)
 import Html exposing (Html, text, div, span, hr)
 import Html.Attributes exposing (style, class, id, placeholder, value)
-import Html.Events exposing (onInput, onClick)
+import Html.Events exposing (onInput, onClick, onWithOptions, defaultOptions, keyCode)
 import Edit.Model exposing (..)
-import Markdown exposing (..)
+import Markdown exposing (toHtml)
+import Json.Decode as Json
 
 
 view : Model -> Html Msg
@@ -38,6 +39,7 @@ editArea model =
                     , ( "max-height", "initial" )
                     ]
                 , onInput InputArticle
+                , onIgnoreTag IgnoreTag
                 , placeholder "← This line is title"
                 , value model.input
                 ]
@@ -109,3 +111,22 @@ tagPreview str =
     tag { tagModifiers | color = Info }
         []
         [ text ("# " ++ str) ]
+
+
+onIgnoreTag : Msg -> Html.Attribute Msg
+onIgnoreTag msg =
+    let
+        decoder =
+            Json.andThen
+                (\x ->
+                    if x == 9 then
+                        Json.succeed msg
+                    else
+                        Json.fail "not tag"
+                )
+                keyCode
+    in
+        onWithOptions
+            "keydown"
+            { defaultOptions | preventDefault = True }
+            decoder
