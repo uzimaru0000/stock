@@ -49,3 +49,6 @@ port getPostData : (UniqAsset Post -> msg) -> Sub msg
 
 
 port successStorePost : (Uid -> msg) -> Sub msg
+
+
+port getPostList : (List (UniqAsset Post) -> msg) -> Sub msg

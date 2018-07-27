@@ -8,16 +8,18 @@ import Data.User exposing (User)
 import Routing exposing (parseLocation)
 import Firebase exposing (..)
 import Edit.Sub as Edit
+import PostListing.Sub as PostListing
 
 
 main : Program (Maybe User) Model Msg
 main =
-   programWithFlags LocationChange
-    { init = \maybeUser loc -> setRoute (parseLocation loc) (init maybeUser)
-    , update = update
-    , view = view
-    , subscriptions = subscriptions
-    }
+    programWithFlags LocationChange
+        { init = \maybeUser loc -> setRoute (parseLocation loc) (init maybeUser)
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -25,10 +27,13 @@ subscriptions model =
         Edit model ->
             Edit.subscriptions model |> Sub.map EditMsg
 
+        PostList model ->
+            PostListing.subscriptions model |> Sub.map PostListingMsg
+
         _ ->
             Sub.none
     , getPostListData PostListInit
     , getPostData PostInit
     , getEditData EditInit
     ]
-    |> Sub.batch
+        |> Sub.batch

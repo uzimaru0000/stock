@@ -30,12 +30,7 @@ update msg model =
             model ! [ logout () ]
 
         ( PostListInit data, _ ) ->
-            case model.user of
-                Just user ->
-                    { model | pageState = Loaded (PostList <| PostListing.init user data) } ! []
-
-                Nothing ->
-                    model ! []
+            { model | pageState = Loaded (PostList <| PostListing.init data) } ! []
 
         ( CreateInit maybePost winHeight, _ ) ->
             { model | pageState = Loaded (Edit <| Edit.init maybePost winHeight) } ! []

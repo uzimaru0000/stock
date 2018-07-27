@@ -9,3 +9,6 @@ update msg model =
     case msg of
         ChangeRoute url ->
             model ! [ newUrl url ]
+
+        GetPosts posts ->
+            { model | posts = posts } ! []

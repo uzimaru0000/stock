@@ -103,4 +103,18 @@ const elmInit = app => {
 
     app.ports.removePost.subscribe(uid => db.ref(`${auth.currentUser.uid}/posts/${uid}`).remove());
 
+    if (auth.currentUser) {
+        db.ref(`${auth.currentUser.uid}/posts`)
+            .on('value', ss => {
+                const postList = [];
+                ss.forEach(x => {
+                    postList.push({
+                        uid: x.key,
+                        asset: createPost(x.val())
+                    });
+                });
+
+                app.ports.getPostList.send(postList);
+            });
+    }
 };

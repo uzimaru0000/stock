@@ -14,3 +14,6 @@ update msg model =
 
         RemovePost ->
             model ! [ removePost model.post.uid, Navigation.newUrl <| routeToUrl Routing.Home ]
+
+        ChangeModalState state ->
+            { model | isModalActive = state } ! []

@@ -1,7 +1,6 @@
 module PostListing.Model exposing (..)
 
 import Data.Post exposing (Post)
-import Data.User exposing (User)
 import Data.Common exposing (UniqAsset, Uid)
 
 
@@ -12,9 +11,10 @@ type alias Model =
 
 type Msg
     = ChangeRoute String
+    | GetPosts (List (UniqAsset Post))
 
 
-init : User -> List (UniqAsset Post) -> Model
-init user posts =
+init : List (UniqAsset Post) -> Model
+init posts =
     { posts = posts
     }

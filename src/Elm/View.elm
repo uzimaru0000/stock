@@ -38,27 +38,29 @@ navigation user =
     navbar { navbarModifiers | color = Dark }
         []
         [ navbarBrand []
-            (navbarBurger False [] [])
+            (text "")
             [ navbarItemLink False [ href Routing.Home ] [ text "Stock" ]
+            , if user /= Nothing then
+                navbarItemLink False
+                    [ href Routing.Create
+                    , displayByDevice
+                        { mobile = Block
+                        , tablet = Block
+                        , desktop = Hidden
+                        , fullHD = Hidden
+                        , widescreen = Hidden
+                        }
+                    ]
+                    [ icon Medium [] [ i [ class "fas fa-lg fa-plus" ] [] ] ]
+              else
+                text ""
             ]
         , navbarMenu False
             []
-            [ navbarStart []
-                [ navbarItemLink False
-                    [ href Routing.Create
-                    , displayByDevice
-                        { mobile = Inline
-                        , tablet = Inline
-                        , desktop = Hidden
-                        , widescreen = Hidden
-                        , fullHD = Hidden
-                        }
-                    ]
-                    [ text "New Stock" ]
-                ]
-            , navbarEnd []
+            [ navbarEnd []
                 [ if user /= Nothing then
-                    navbarItemLink False [ href Routing.Create ]
+                    navbarItemLink False
+                        [ href Routing.Create ]
                         [ icon Medium [] [ i [ class "fas fa-lg fa-plus" ] [] ] ]
                   else
                     text ""

@@ -1,19 +1,20 @@
 module Post.View exposing (..)
 
 import Post.Model exposing (..)
-import Html exposing (Html, text, div, span, hr, i, a)
+import Html exposing (Html, text, div, span, hr, i, a, p)
 import Html.Attributes exposing (style, class)
 import Html.Events exposing (onClick)
 import Bulma.Layout exposing (..)
 import Bulma.Columns exposing (..)
 import Bulma.Elements exposing (..)
+import Bulma.Components exposing (..)
 import Bulma.Modifiers exposing (..)
 import Markdown exposing (toHtml)
 import Routing exposing (Route, routeToUrl)
 
 
 view : Model -> Html Msg
-view { post } =
+view { post, isModalActive } =
     section NotSpaced
         []
         [ columns { columnsModifiers | centered = True }
@@ -21,11 +22,13 @@ view { post } =
             [ column
                 { columnModifiers
                     | widths =
-                        Devices widths widths widths widths widths
+                        Devices (Just Auto) (Just Auto) widths widths widths
                 }
                 []
                 [ box []
-                    [ level []
+                    [ level
+                        [ class "is-mobile"
+                        ]
                         [ levelLeft []
                             [ levelItem []
                                 [ title H3
@@ -45,7 +48,7 @@ view { post } =
                                     ]
                                 ]
                             , levelItemLink []
-                                [ delete [ onClick RemovePost ] []
+                                [ delete [ onClick <| ChangeModalState True ] []
                                 ]
                             ]
                         ]
@@ -61,6 +64,7 @@ view { post } =
                     ]
                 ]
             ]
+        , removeModal isModalActive
         ]
 
 
@@ -74,3 +78,30 @@ postTag str =
     tag { tagModifiers | color = Info, isLink = True, size = Standard }
         []
         [ text <| "# " ++ str ]
+
+
+removeModal : Bool -> Html Msg
+removeModal isActive =
+    modal isActive
+        []
+        [ modalBackground [ onClick <| ChangeModalState False ] []
+        , modalCard []
+            [ modalCardHead []
+                [ modalCardTitle [] [ text "Remove" ]
+                , modalClose Standard [ onClick <| ChangeModalState False ] []
+                ]
+            , modalCardBody []
+                [ content Standard
+                    []
+                    [ p [] [ text "本当に消してもいいですか？\n（消した内容は戻りません）" ] ]
+                ]
+            , modalCardFoot []
+                [ button { buttonModifiers | color = Danger }
+                    [ onClick RemovePost ]
+                    [ span [] [ text "OK" ] ]
+                , button buttonModifiers
+                    [ onClick <| ChangeModalState False ]
+                    [ span [] [ text "Cancel" ] ]
+                ]
+            ]
+        ]
